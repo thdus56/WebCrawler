@@ -4,11 +4,9 @@
 
 <%
 	String aa = "";
-	String number = request.getParameter("number");
- 
-	if (number.equals("1")) {
-		aa = "[{\"term\": \"haha. 하하\", \"part\": \"형용사\", \"definition\" : \"웃음소리\"}]";
-	}
+	
+	aa = "[{\"term\": \"haha. 하하\", \"part\": \"형용사\", \"definition\" : \"웃음소리\"}]";
+
 %>
 
 <%=aa%>

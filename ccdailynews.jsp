@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8" language="java" %>
+<%@ page contentType="application/json; charset=utf-8" language="java" %>
 <%@ page import="org.jsoup.Jsoup, org.jsoup.nodes.Document, org.jsoup.nodes.Element, org.jsoup.select.Elements" %>
 <html>
 <head>
