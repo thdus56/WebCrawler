@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" %>
-<%@ page import="java.sql.*, javax.sql.*, java.io.*, java.util.*, org.json.*" %>
+<%@ page import="java.sql.*, javax.sql.*, java.io.*, java.util.*, java.text.*, org.json.*" %>
 <% request.setCharacterEncoding("utf-8"); %>
 <%
 	// 날짜 포맷
@@ -12,7 +12,6 @@
 
 	Connection conn = null;
 	Statement stmt = null;
-	ResultSet rset = null;
 	
 	String status = request.getParameter("status");
 	String company = request.getParameter("company");
@@ -31,26 +30,27 @@
 		// Statement 객체 생성
 		stmt = conn.createStatement();
 		
-		stmt.execute("delete from TBL_ARTICLE where write_date != '"+sdf.format(today)+"'");
+		stmt.execute("delete from TBL_ARTICLE where write_date != '"+sdf.format(today)+"' and company ='"+company+"';");
 		
 		for (int i = 0; i < array.length(); i++) {
 			// jsonarray를 하나씩 jsonobject로 받음
 			JSONObject oneNews = array.getJSONObject(i);
 			
-			// 작은 따옴표 치환
+			// 작은 따옴표 치환(DB 입력할 때 오류 안 나게)
 			title = oneNews.getString("title").replaceAll("'", "&#39;");
 			article_link = oneNews.getString("article_link");
 			write_date = oneNews.getString("write_date");
 			
 			// PK가 중복이면 제목만 업데이트
-			stmt.execute("insert TBL_ARTICLE(company, title, article_link, write_date)"
-						+"values ('"+company+"', '"+title+"', '"+article_link+"', '" + write_date +"')"
-						+"on duplicate key update title='"+title+"';");
+			stmt.execute("insert ignore TBL_ARTICLE(company, title, article_link, write_date)"
+						+"values ('"+company+"', '"+title+"', '"+article_link+"', '" + write_date +"');");
 		}
 	} catch (SQLException e) {
-		out.print(e);
+		//status = e.toString();
+		//out.print(e);
 	} catch (Exception e) {
-		out.print(e);
+		//status = e.toString();
+		//out.print(e);
 	} finally {
 		try { if (stmt != null) stmt.close(); } catch (Exception e) {};
 		try { if (conn != null) conn.close(); } catch (Exception e) {};

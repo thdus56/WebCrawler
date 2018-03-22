@@ -1,19 +1,19 @@
-<%@ page contentType="text/html; charset=utf-8" language="java" %>
+<%@ page contentType="application/json; charset=utf-8" language="java" %>
 <%@ page import="org.jsoup.Jsoup, org.jsoup.nodes.Document, org.jsoup.nodes.Element, org.jsoup.select.Elements, org.json.*" %>
 <%
 	// 한겨레 전체 기사 페이지
 	Document doc = Jsoup.connect("http://www.hani.co.kr/arti/list.html").get();
 	
-	// 기사 내용 부분 크롤링
-	Elements links = doc.select("div.article-area");
-	
 	JSONArray array = new JSONArray();
-	JSONObject jsonObj = new JSONObject();
 	
 	String title = "";
 	String article_link = "";
 	String write_date = "";
 	
+	// 기사 크롤링할 태그 부분 선택
+	Elements links = doc.select("div.article-area");
+	
+	// 기사 내용 부분 크롤링
 	for (Element link : links) {
 		// 기사 제목
 		title = link.select(".article-title a").text();
