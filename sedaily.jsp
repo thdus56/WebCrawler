@@ -1,8 +1,8 @@
 <%@ page contentType="application/json; charset=utf-8" language="java" %>
 <%@ page import="java.util.*, java.text.*, org.jsoup.Jsoup, org.jsoup.nodes.Document, org.jsoup.nodes.Element, org.jsoup.select.Elements, org.json.*" %>
 <%
-	// 충청일보 전체 뉴스 페이지
-	Document doc = Jsoup.connect("http://www.ccdailynews.com/news/articleList.html?view_type=sm").get();
+	// 서울경제 전체뉴스 페이지
+	Document doc = Jsoup.connect("http://www.sedaily.com/News/NewsAll").get();
 	
 	JSONArray array = new JSONArray();
 	
@@ -15,16 +15,16 @@
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	
 	// 기사 크롤링할 태그 부분 선택
-	Elements links = doc.select("td.ArtList_Title");
+	Elements links = doc.select("ul.news_list li div");
 	
 	// 기사 내용 부분 크롤링
 	for (Element link : links) {
 		// 기사 제목
-		title = link.select("a").text();
+		title = link.select("dt a").text();
 		// 기사 링크 주소
-		article_link = "http://www.ccdailynews.com/news/"+link.select("a").attr("href");
-		// 기사 작성일자
-		write_date = link.select("div font.View_SmFont.FontEng").text() + " " + sdf.format(nowtime);
+		article_link = "http://www.sedaily.com" + link.select("dt a").attr("href");
+		// 기사 작성일자(날짜 뒤에 있는 시간 자름)
+		write_date = link.select("dd span.letter").text() + " " + sdf.format(nowtime);
 		
 		JSONObject article = new JSONObject();
 		article.put("title", title);
@@ -34,9 +34,9 @@
 		// jsonarray에 jsonobject 하나씩 넣음
 		array.put(article);
 	}
-
+	
 	String all_news = array.toString();
 	
 	out.print(all_news);
-	
+
 %>

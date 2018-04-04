@@ -1,8 +1,8 @@
 <%@ page contentType="application/json; charset=utf-8" language="java" %>
 <%@ page import="org.jsoup.Jsoup, org.jsoup.nodes.Document, org.jsoup.nodes.Element, org.jsoup.select.Elements, org.json.*" %>
 <%
-	// 헤럴드경제 전체 기사 페이지
-	Document doc = Jsoup.connect("http://biz.heraldcorp.com/list.php?ct=010000000000").get();
+	// YTN 최신뉴스 페이지
+	Document doc = Jsoup.connect("http://www.ytn.co.kr/news/news_quick.html").get();
 	
 	JSONArray array = new JSONArray();
 	
@@ -11,16 +11,17 @@
 	String write_date = "";
 	
 	// 기사 크롤링할 태그 부분 선택
-	Elements links = doc.select("div.list ul li a");
+	Elements links = doc.select("dl.news_list_v2014");
 	
-	// 기사 내용 부분 크롤링
+	// 반복문으로 기사 크롤링
 	for (Element link : links) {
+		
 		// 기사 제목
-		title = link.select("div.list_t1").text();
+		title = link.select("dt a").text().replaceAll("\"", "\'");
 		// 기사 링크 주소
-		article_link = "http://biz.heraldcorp.com/"+link.attr("href");
-		// 기사 작성일자(날짜 뒤에 있는 시간 자름)
-		write_date = link.select("div.list_t3").text().substring(0, 10);
+		article_link = "http://www.ytn.co.kr" + link.select("dt a").attr("href");
+		// 기사 작성일자(날짜 뒤에 있는 시간 자르고 .을 -로 바꿈)
+	write_date = link.select("dd.date").text().replaceAll("\\[", "").replaceAll("\\]", "") + ":00";
 		
 		JSONObject article = new JSONObject();
 		article.put("title", title);
@@ -28,11 +29,12 @@
 		article.put("write_date", write_date);
 		
 		// jsonarray에 jsonobject 하나씩 넣음
-		array.put(article);
+		array.put(article);	
 	}
 	
 	String all_news = array.toString();
 	
 	out.print(all_news);
-
+	
 %>
+

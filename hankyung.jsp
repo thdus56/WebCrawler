@@ -20,7 +20,7 @@
 		// 기사 링크 주소
 		article_link = link.select("a").attr("href");
 		// 기사 작성일자(날짜 뒤에 있는 시간 자름)
-		write_date = link.select("span.time").text().substring(0, 10);
+		write_date = link.select("span.time").text() + ":00";
 		
 		JSONObject article = new JSONObject();
 		article.put("title", title);

@@ -20,7 +20,7 @@
 		// 기사 링크 주소
 		article_link = "http://www.hani.co.kr"+link.select(".article-title a").attr("href");
 		// 기사 작성일자
-		write_date = link.select("span.date").text();
+		write_date = link.select("span.date").text() + ":00";
 		
 		JSONObject article = new JSONObject();
 		article.put("title", title);
@@ -33,6 +33,7 @@
 	
 	String all_news = array.toString();
 	
+	//out.print("기사 개수: " + array.length());
 	out.print(all_news);
 
 %>

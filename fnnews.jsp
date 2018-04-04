@@ -20,8 +20,8 @@
 		title = link.select("strong a").text().replaceAll("\"", "\'");
 		// 기사 링크 주소
 		article_link = "http://www.fnnews.com"+link.select("strong a").attr("href");
-		// 기사 작성일자(날짜 뒤에 있는 시간 자르고 .을 -로 바꿈)
-		write_date = link.select("span.category_date").text().substring(0, 10).replaceAll("\\.", "-");
+		// 기사 작성일자(.을 -로 바꿈)
+		write_date = link.select("span.category_date").text().replaceAll("\\.", "-") + ":00";
 		
 		JSONObject article = new JSONObject();
 		article.put("title", title);

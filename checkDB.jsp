@@ -8,16 +8,17 @@
 
 	Connection conn = null;
 	Statement stmt = null;
+	ResultSet rset = null;
 	
 	String status = request.getParameter("status");
 	String company = request.getParameter("company");
 	String articleArray = request.getParameter("articleArray");
 	
 	String title = "";
-	String article_link = "";
+	String new_link = "";
 	String write_date = "";
 	
-	int insert_cnt = 0;
+	int dup_cnt = 0;
 	
 	// status.jsp에서 넘어온 배열값을 jsonarray로 받음
 	JSONArray array = new JSONArray(articleArray);
@@ -27,22 +28,24 @@
 		conn = DriverManager.getConnection("jdbc:mysql://localhost/kopoctc14", "root", "911120");
 		// Statement 객체 생성
 		stmt = conn.createStatement();
+		// 기사 링크 조회
+		rset = stmt.executeQuery("select article_link from TBL_ARTICLE where company = '"+company+"';");
 		
-		for (int i = 0; i < array.length(); i++) {
-			// jsonarray를 하나씩 jsonobject로 받음
-			JSONObject oneNews = array.getJSONObject(i);
+		// DB에서 조회한 링크를 크롤링한 링크와 비교
+		while (rset.next()) {
 			
-			// 작은 따옴표 치환(DB 입력할 때 오류 안 나게)
-			title = oneNews.getString("title").replaceAll("'", "&#39;");
-			article_link = oneNews.getString("article_link");
-			write_date = oneNews.getString("write_date");
-			
-			// PK가 중복이면 무시하고 insert
-			stmt.execute("insert ignore TBL_ARTICLE(company, title, article_link, write_date)"
-						+"values ('"+company+"', '"+title+"', '"+article_link+"', '" + write_date +"');");
-		
-			insert_cnt++;
+			for (int i = 0; i < array.length(); i++) {
+				// jsonarray를 하나씩 jsonobject로 받음
+				JSONObject oneNews = array.getJSONObject(i);
+				new_link = oneNews.getString("article_link");
+				
+				// 링크가 같으면 카운트 증가(중복 +)
+				if (new_link.equals(rset.getString("article_link")) == true) {
+					dup_cnt++;
+				}
+			}
 		}
+		
 	} catch (SQLException e) {
 		status = e.toString();
 		out.print(e);
@@ -58,8 +61,9 @@
 <%
 	JSONObject count_obj = new JSONObject();
 	
-	count_obj.put("insertcnt", insert_cnt);
+	count_obj.put("dup_cnt", dup_cnt);
 	count_obj.put("length", array.length());
+	count_obj.put("new_cnt", array.length() - dup_cnt);
 
 	out.print(count_obj.toString());
 	
