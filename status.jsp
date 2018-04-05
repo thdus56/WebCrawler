@@ -24,7 +24,25 @@ $(document).ready(function() {
 	setTimeout("location.reload()", 300000);
 });
 
+// 크롤링 시작 시간 측정
+function crawling_start(company) {
+	var startTime = new Date().getTime();
+	return startTime;
+}
+
+// 크롤링 종료 시간 측정
+function crawling_end(company) {
+	var endTime = new Date().getTime();
+	return endTime;
+}
+
+// 크롤링 소요시간 계산식
+function countTime(company, start, end) {
+	document.getElementById("time_" + company).innerHTML = (end - start) / 1000 + "초";
+}
+
 function crawlingNews(company) {
+	var startTime = crawling_start(company);
 	
 	countBeforeAll(company);
 	
@@ -36,10 +54,12 @@ function crawlingNews(company) {
 		document.getElementById("status_"+company).innerHTML = "기사 수집 성공";
 		moveToInsertDB(company, resdata);
 		checkDupl(company, resdata);
+		countTime(company, startTime, crawling_end(company));
 	}).fail(function(xhr, status, errorThrown) {
 		document.getElementById("status_"+company).innerHTML = "기사 수집 오류: " + errorThrown;
+		countTime(company, startTime, crawling_end(company));
 	});
-	
+
 }
 
 function moveToInsertDB(company, resdata) {
@@ -54,11 +74,14 @@ function moveToInsertDB(company, resdata) {
 		}											// HTTP 요청과 함께 서버로 보낼 데이터
 	}).done(function(data) {
 		document.getElementById("status_"+company).innerHTML = "DB 입력 성공";
+		
 	}).fail(function(xhr, status, errorThrown) {
 		document.getElementById("status_"+company).innerHTML = "DB 입력 오류: " + errorThrown;
+		
 	});
 }
 
+// 크롤링한 기사 중에 중복 체크
 function checkDupl(company, resdata) {
 	$.ajax({
 		url: "checkDB.jsp",		// 클라이언트가 요청을 보낼 서버의 URL주소(데이터를 받아올 곳)
@@ -71,13 +94,13 @@ function checkDupl(company, resdata) {
 	}).done(function(data) {
 		document.getElementById("old_"+company).innerHTML = data.dup_cnt;
 		document.getElementById("new_"+company).innerHTML = data.new_cnt;
-		moveToInsertDB(company, resdata);
 	}).fail(function(xhr, status, errorThrown) {
 		document.getElementById("old_"+company).innerHTML = "중복 체크 오류: " + errorThrown;
 		document.getElementById("new_"+company).innerHTML = "중복 체크 오류: " + errorThrown;
 	});
 }
 
+// 크롤링하기 전 기사 개수 카운트
 function countBeforeAll(company) {
 	$.ajax({
 			url: "table.jsp",
@@ -92,7 +115,7 @@ function countBeforeAll(company) {
 	});
 }
 
-
+// 시계 출력
 function dpTime() {
 	var now = new Date();
 	var hours = now.getHours();
@@ -138,7 +161,8 @@ function dpTime() {
 		<tr>
 			<th scope="col">언론사</th>
 			<th scope="col">크롤링 상태</th>
-			<th scope="col">총 기사 개수</th>
+			<th scope="col">소요 시간</th>
+			<th scope="col">크롤링 전 기사 개수</th>
 			<th scope="col">신규 기사</th>
 			<th scope="col">중복 기사</th>
 		</tr>
@@ -147,6 +171,7 @@ function dpTime() {
 		<tr>
 			<td>파이낸셜뉴스</td>
 			<td id="status_fnnews"></td>
+			<td id="time_fnnews"></td>
 			<td id="total_fnnews"></td>
 			<td id="new_fnnews"></td>
 			<td id="old_fnnews"></td>
@@ -154,6 +179,7 @@ function dpTime() {
 		<tr>
 			<td>한겨레</td>
 			<td id="status_hani"></td>
+			<td id="time_hani"></td>
 			<td id="total_hani"></td>
 			<td id="new_hani"></td>
 			<td id="old_hani"></td>
@@ -161,6 +187,7 @@ function dpTime() {
 		<tr>
 			<td>한국경제</td>
 			<td id="status_hankyung"></td>
+			<td id="time_hankyung"></td>
 			<td id="total_hankyung"></td>
 			<td id="new_hankyung"></td>
 			<td id="old_hankyung"></td>
@@ -168,6 +195,7 @@ function dpTime() {
 		<tr>
 			<td>충청일보</td>
 			<td id="status_ccdailynews"></td>
+			<td id="time_ccdailynews"></td>
 			<td id="total_ccdailynews"></td>
 			<td id="new_ccdailynews"></td>
 			<td id="old_ccdailynews"></td>
@@ -175,6 +203,7 @@ function dpTime() {
 		<tr>
 			<td>서울경제</td>
 			<td id="status_sedaily"></td>
+			<td id="time_sedaily"></td>
 			<td id="total_sedaily"></td>
 			<td id="new_sedaily"></td>
 			<td id="old_sedaily"></td>
@@ -182,6 +211,7 @@ function dpTime() {
 		<tr>
 			<td>YTN</td>
 			<td id="status_ytn"></td>
+			<td id="time_ytn"></td>
 			<td id="total_ytn"></td>
 			<td id="new_ytn"></td>
 			<td id="old_ytn"></td>

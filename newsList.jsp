@@ -238,25 +238,25 @@
 %>
 	</tbody>
 	</table>
-	
 	총 <%=totalCount%> 건 <br>
-
 	<nav>
 		<ul class="pagination pagination-sm justify-content-center">		
 <%
+	if (search.equals("") == false) {
+		
 		if (click_company.equals("") == false) {
 			
 			// 처음 버튼 표시(블록 시작 페이지가 1보다 클 경우)
 			if (startPage > 1) {
 				out.print("<li class='page-item'>");
-				out.print("<a class='page-link' href='?page=1&selectCompany="+click_company+"'>처음</a>");
+				out.print("<a class='page-link' href='?page=1&selectCompany="+click_company+"&search="+search+"'>처음</a>");
 				out.print("</li>");
 			}
 		
 			// 이전 버튼 표시(현재 페이지가 1보다 크면 이전 버튼 활성화)
 			if (curPage > 1) {
 				out.print("<li class='page-item'>");
-				out.print("<a class='page-link' href='?page="+(curPage-1)+"&selectCompany="+click_company+"'>이전</a>");
+				out.print("<a class='page-link' href='?page="+(curPage-1)+"&selectCompany="+click_company+"&search="+search+"'>이전</a>");
 				out.print("</li>");
 			} else {
 				out.print("<li class='page-item disabled'>");
@@ -267,16 +267,16 @@
 			// 페이지 번호 출력
 			for (int iCount = startPage; iCount <= endPage; iCount++) {
 				if (iCount == curPage) {
-					out.print("<li class='page-item active'><a class='page-link' href='?page="+iCount+"&selectCompany="+click_company+"'>"+iCount+"</a></li>");					
+					out.print("<li class='page-item active'><a class='page-link' href='?page="+iCount+"&selectCompany="+click_company+"&search="+search+"'>"+iCount+"</a></li>");					
 				} else {
-					out.print("<li class='page-item'><a class='page-link' href='?page="+iCount+"&selectCompany="+click_company+"'>"+iCount+"</a></li>");
+					out.print("<li class='page-item'><a class='page-link' href='?page="+iCount+"&selectCompany="+click_company+"&search="+search+"'>"+iCount+"</a></li>");
 				}	
 			}
 			
 			// 다음 버튼 표시(현재 페이지가 총 페이지보다 작을 때만 다음 버튼 활성화)
 			if (curPage < totalPage) {
 				out.print("<li class='page-item'>");
-				out.print("<a class='page-link' href='?page="+(curPage+1)+"&selectCompany="+click_company+"'>다음</a>");
+				out.print("<a class='page-link' href='?page="+(curPage+1)+"&selectCompany="+click_company+"&search="+search+"'>다음</a>");
 				out.print("</li>"); 
 			} else {
 				out.print("<li class='page-item disabled'>");
@@ -287,11 +287,107 @@
 			// 끝 버튼 표시(블록 끝페이지가 총 페이지보다 작을 때)
 			if (endPage < totalPage) {
 				out.print("<li class='page-item'>");
-				out.print("<a class='page-link' href='?page="+totalPage+"&selectCompany="+click_company+"'>끝</a>");
+				out.print("<a class='page-link' href='?page="+totalPage+"&selectCompany="+click_company+"&search="+search+"'>끝</a>");
 				out.print("</li>");
 			}
 		} else {
 		
+			// 처음 버튼 표시(블록 시작 페이지가 1보다 클 경우)
+			if (startPage > 1) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page=1&search="+search+"'>처음</a>");
+				out.print("</li>");
+			}
+		
+			// 이전 버튼 표시(현재 페이지가 1보다 크면 이전 버튼 활성화)
+			if (curPage > 1) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page="+(curPage-1)+"&search="+search+"'>이전</a>");
+				out.print("</li>");
+			} else {
+				out.print("<li class='page-item disabled'>");
+				out.print("<a class='page-link' href='#' tabindex='-1'>이전</a>");
+				out.print("</li>");
+			}
+
+			// 페이지 번호 출력
+			for (int iCount = startPage; iCount <= endPage; iCount++) {
+				if (iCount == curPage) {
+					out.print("<li class='page-item active'><a class='page-link' href='?page="+iCount+"&search="+search+"'>"+iCount+"</a></li>");					
+				} else {
+					out.print("<li class='page-item'><a class='page-link' href='?page="+iCount+"&search="+search+"'>"+iCount+"</a></li>");
+				}	
+			}
+			
+			// 다음 버튼 표시(현재 페이지가 총 페이지보다 작을 때만 다음 버튼 활성화)
+			if (curPage < totalPage) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page="+(curPage+1)+"&search="+search+"'>다음</a>");
+				out.print("</li>"); 
+			} else {
+				out.print("<li class='page-item disabled'>");
+				out.print("<a class='page-link' href='#' tabindex='-1'>다음</a>");
+				out.print("</li>");
+			}
+			
+			// 끝 버튼 표시(블록 끝페이지가 총 페이지보다 작을 때)
+			if (endPage < totalPage) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page="+totalPage+"&search="+search+"'>끝</a>");
+				out.print("</li>");
+			}
+		}					
+	
+	} else {
+		
+		if (click_company.equals("") == false) {
+			
+			// 처음 버튼 표시(블록 시작 페이지가 1보다 클 경우)
+			if (startPage > 1) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page=1&selectCompany="+click_company+"&search="+search+"'>처음</a>");
+				out.print("</li>");
+			}
+		
+			// 이전 버튼 표시(현재 페이지가 1보다 크면 이전 버튼 활성화)
+			if (curPage > 1) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page="+(curPage-1)+"&selectCompany="+click_company+"&search="+search+"'>이전</a>");
+				out.print("</li>");
+			} else {
+				out.print("<li class='page-item disabled'>");
+				out.print("<a class='page-link' href='#' tabindex='-1'>이전</a>");
+				out.print("</li>");
+			}
+
+			// 페이지 번호 출력
+			for (int iCount = startPage; iCount <= endPage; iCount++) {
+				if (iCount == curPage) {
+					out.print("<li class='page-item active'><a class='page-link' href='?page="+iCount+"&selectCompany="+click_company+"&search="+search+"'>"+iCount+"</a></li>");					
+				} else {
+					out.print("<li class='page-item'><a class='page-link' href='?page="+iCount+"&selectCompany="+click_company+"&search="+search+"'>"+iCount+"</a></li>");
+				}	
+			}
+			
+			// 다음 버튼 표시(현재 페이지가 총 페이지보다 작을 때만 다음 버튼 활성화)
+			if (curPage < totalPage) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page="+(curPage+1)+"&selectCompany="+click_company+"&search="+search+"'>다음</a>");
+				out.print("</li>"); 
+			} else {
+				out.print("<li class='page-item disabled'>");
+				out.print("<a class='page-link' href='#' tabindex='-1'>다음</a>");
+				out.print("</li>");
+			}
+			
+			// 끝 버튼 표시(블록 끝페이지가 총 페이지보다 작을 때)
+			if (endPage < totalPage) {
+				out.print("<li class='page-item'>");
+				out.print("<a class='page-link' href='?page="+totalPage+"&selectCompany="+click_company+"&search="+search+"'>끝</a>");
+				out.print("</li>");
+			}
+		} else {
+	
 			// 처음 버튼 표시(블록 시작 페이지가 1보다 클 경우)
 			if (startPage > 1) {
 				out.print("<li class='page-item'>");
@@ -336,15 +432,24 @@
 				out.print("<a class='page-link' href='?page="+totalPage+"'>끝</a>");
 				out.print("</li>");
 			}
-		}					
+		}	
+	}
+	
 %>
 		</ul>
 	</nav>
 	
-		<form method="post" class="needs-validation form-inline float-right" novalidate>
+		<form class="needs-validation form-inline float-right" novalidate>
 			<div class="form-row">
 				<div class="col-auto">
+<%
+				if (search.equals("") == false) {
+%>
+					<input type="text" class="form-control form-control-sm" id="search" name="search" placeholder="제목 검색" value="<%=search%>" required>	
+<%	
+				} else {																																														%>
 					<input type="text" class="form-control form-control-sm" id="search" name="search" placeholder="제목 검색" required>
+<%				}																																																%>
 					<div class="invalid-feedback">
 						검색어를 입력하세요!
 					</div>
