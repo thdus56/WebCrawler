@@ -16,9 +16,9 @@ MIT license
 **jsoup**  
 https://jsoup.org/  
 Copyright © 2009 - 2017 Jonathan Hedley (jonathan@hedley.net)  
-The MIT License  
+MIT License  
 
 **Bootstrap**  
 https://getbootstrap.com/  
 Copyright © 2018 Twitter  
-The MIT License  
+MIT License  
