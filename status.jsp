@@ -52,11 +52,13 @@ function crawlingNews(company) {
 		dataType: "json",				// 서버에서 보내줄 데이터 타입
 	}).done(function(resdata) {
 		document.getElementById("status_"+company).innerHTML = "기사 수집 성공";
+		document.getElementById("status_"+company).classList.toggle('table-warning');
 		moveToInsertDB(company, resdata);
 		checkDupl(company, resdata);
 		countTime(company, startTime, crawling_end(company));
 	}).fail(function(xhr, status, errorThrown) {
 		document.getElementById("status_"+company).innerHTML = "기사 수집 오류: " + errorThrown;
+		document.getElementById("status_"+company).classList.toggle('table-danger');
 		countTime(company, startTime, crawling_end(company));
 	});
 
@@ -73,10 +75,12 @@ function moveToInsertDB(company, resdata) {
 			status: "success",
 		}											// HTTP 요청과 함께 서버로 보낼 데이터
 	}).done(function(data) {
+		document.getElementById("status_"+company).classList.remove('table-warning');
 		document.getElementById("status_"+company).innerHTML = "DB 입력 성공";
-		
+		document.getElementById("status_"+company).classList.toggle('table-success');
 	}).fail(function(xhr, status, errorThrown) {
 		document.getElementById("status_"+company).innerHTML = "DB 입력 오류: " + errorThrown;
+		document.getElementById("status_"+company).classList.toggle('table-danger');
 		
 	});
 }
@@ -84,7 +88,7 @@ function moveToInsertDB(company, resdata) {
 // 크롤링한 기사 중에 중복 체크
 function checkDupl(company, resdata) {
 	$.ajax({
-		url: "checkDB.jsp",		// 클라이언트가 요청을 보낼 서버의 URL주소(데이터를 받아올 곳)
+		url: "checkDB.jsp",				// 클라이언트가 요청을 보낼 서버의 URL주소(데이터를 받아올 곳)
 		type: "post",					// HTTP 요청 방식(GET, POST)
 		dataType: "json",				// 서버에서 보내줄 데이터 타입
 		data: {
@@ -156,8 +160,8 @@ function dpTime() {
 <br><h3><p class="text-center">언론사 크롤링 상태</p></h3><br>
 <form id="status_form">
 <!--<input type="button" id="button" value="크롤링 시작">-->
-<table class="table text-center">
-	<thead>
+<table class="table table-bordered text-center">
+	<thead class="thead-light">
 		<tr>
 			<th scope="col">언론사</th>
 			<th scope="col">크롤링 상태</th>
