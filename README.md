@@ -19,7 +19,7 @@ Copyright © 2009 - 2017 Jonathan Hedley (jonathan@hedley.net)
 MIT License  
 
 **JSON-lib**  
-http://json-lib.sourceforge.net/
+http://json-lib.sourceforge.net/  
 Copyright © 2006-2010 Json-lib  
 Apache License 2.0  
 
